@@ -10,7 +10,7 @@ Three components, Manifest V3:
 
 - **Side Panel** (`sidepanel.html` + `sidepanel.js`) — The UI. Rendered via `chrome.sidePanel` API.
 - **Content Script** (`content.js`) — Injected into Cardmarket pages. Scrapes the expansion/set name from the DOM on demand.
-- **Service Worker** (`background.js`) — Manages side panel availability based on tab URL. Routes messages between content script and side panel.
+- **Service Worker** (`background.js`) — Manages side panel availability based on tab URL via `chrome.sidePanel.setOptions()`.
 
 ## User Flow
 
@@ -32,7 +32,7 @@ Three components, Manifest V3:
 
 ### Manual Mode (Back button)
 
-1. User clicks "Back" to switch to manual search view.
+1. User clicks "Browse Sets" to switch to manual search view.
 2. A text input with live autocomplete filters against a cached set list (from `https://api.scryfall.com/sets`).
 3. User selects a set from the dropdown.
 4. Same collector number input appears.
@@ -51,20 +51,20 @@ Three components, Manifest V3:
 ### 2. Auto Mode View (default on Cardmarket)
 - Detected expansion name (read-only display)
 - "Detect" button to re-scrape current page
-- Collector number input (numeric)
+- Collector number input (text — collector numbers may contain letters, e.g., "100a", "12b")
 - "Search" submit button
 - Result area (initially hidden)
 
 ### 3. Manual Mode View
-- "Back" button returns here from auto mode; "Auto" button returns to auto mode
+- "Browse Sets" button enters this view from auto mode; "Auto Detect" button returns to auto mode
 - Set search input with live autocomplete dropdown
 - After set selection: collector number input + submit
 - Result area
 
 ### 4. Result Display
 - Card English name (prominent)
-- Card image thumbnail (from Scryfall `image_uris.small` or `image_uris.normal`)
-- Cardmarket link button: `https://www.cardmarket.com/en/Magic/Products/Singles/{SetName}/{CardName}?sellerCountry={country}&language={languages}`
+- Card image thumbnail: use `image_uris.normal` if present at top level; if absent (double-faced cards), fall back to `card_faces[0].image_uris.normal`
+- Cardmarket link button: use `purchase_uris.cardmarket` from the Scryfall response, appending `&sellerCountry={country}&language={languages}` query params
 - "Search again" option to clear result and return to input
 
 ### 5. Settings View
@@ -100,7 +100,8 @@ Three components, Manifest V3:
 ### Card Lookup
 - Endpoint: `GET https://api.scryfall.com/cards/{set_code}/{collector_number}`
 - Called on each user search submission.
-- Response fields used: `name`, `image_uris.normal`, `set_name`, `collector_number`.
+- Response fields used: `name`, `image_uris.normal` (with `card_faces[0].image_uris.normal` fallback for DFCs), `set_name`, `collector_number`, `purchase_uris.cardmarket`.
+- All requests must include a `User-Agent` header (e.g., `HGListPlugin/1.0`) per Scryfall's usage guidelines.
 
 ## Set Name Resolution
 
@@ -113,14 +114,13 @@ Cardmarket displays expansion names that may differ from Scryfall's naming. Reso
 
 ## Cardmarket Link Construction
 
-Template: `https://www.cardmarket.com/en/Magic/Products/Singles/{SetSlug}/{CardSlug}?sellerCountry={country}&language={languages}`
+Use the `purchase_uris.cardmarket` URL returned by the Scryfall API response. This is a reliable, product-ID-based URL that avoids fragile slug construction. Append the user's configured query params:
 
-Slug rules:
-- Replace spaces with hyphens.
-- Handle special characters (e.g., apostrophes, commas) — strip or encode as Cardmarket does.
-- Split cards / double-faced cards may need special handling (e.g., "Fire // Ice" → "Fire-Ice").
+```
+{purchase_uris.cardmarket}&sellerCountry={country}&language={languages}
+```
 
-The set slug comes from Cardmarket's own URL structure when in auto mode (can be scraped from the page URL). In manual mode, we'll need to construct it from the Scryfall set name using the slug rules above.
+This eliminates the need for any slug logic or special-character handling.
 
 ## Content Script: DOM Scraping
 
@@ -141,7 +141,7 @@ Using `chrome.storage.local`:
 |-----|------|---------|-------------|
 | `sellerCountry` | number | 26 | Cardmarket seller country filter |
 | `languageFilter` | string | "1,8" | Comma-separated language IDs |
-| `scryfallSets` | object | null | Cached set list |
+| `scryfallSets` | array | null | Cached set list (only `code` and `name` fields per set, ~60-90KB) |
 | `scryfallSetsCachedAt` | number | 0 | Timestamp of last set list fetch |
 
 ## Error Handling
@@ -189,6 +189,15 @@ hglistplugin/
   "host_permissions": [
     "https://www.cardmarket.com/*",
     "https://api.scryfall.com/*"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.cardmarket.com/*/Magic/Products/Singles/*"],
+      "js": ["content.js"]
+    }
   ]
 }
 ```
