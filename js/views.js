@@ -11,7 +11,7 @@ function esc(str) {
 export function renderOffSite() {
   app().innerHTML = `
     <div class="view off-site">
-      <h2>HG List</h2>
+      <h2>Hunting Grounds</h2>
       <p class="message">Navigate to Cardmarket to get started.</p>
     </div>
   `;
@@ -25,7 +25,7 @@ export function renderAutoMode({ detectedSet, unmatchedSetName, onDetect, onSear
   app().innerHTML = `
     <div class="view auto-mode">
       <div class="header">
-        <h2>HG List</h2>
+        <h2>Hunting Grounds</h2>
         <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
       </div>
       <div class="detected-set">
@@ -58,7 +58,7 @@ export function renderManualMode({ sets, onSelectSet, onAutoDetect, onSettings }
   app().innerHTML = `
     <div class="view manual-mode">
       <div class="header">
-        <h2>HG List</h2>
+        <h2>Hunting Grounds</h2>
         <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
       </div>
       <div class="search-set">
@@ -103,7 +103,7 @@ export function renderManualWithCollector({ selectedSet, onSearch, onBack, onSet
   app().innerHTML = `
     <div class="view manual-mode">
       <div class="header">
-        <h2>HG List</h2>
+        <h2>Hunting Grounds</h2>
         <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
       </div>
       <div class="detected-set">
@@ -134,7 +134,7 @@ export function renderResult({ card, cardmarketHref, onSearchAgain }) {
 
   let linkHtml = '';
   if (cardmarketHref) {
-    linkHtml = `<a href="${esc(cardmarketHref)}" target="_blank" rel="noopener noreferrer" class="cardmarket-link">View on Cardmarket</a>`;
+    linkHtml = `<a href="${esc(cardmarketHref)}" id="cardmarket-link" class="cardmarket-link">View on Cardmarket</a>`;
   } else {
     linkHtml = `<p class="no-link">Cardmarket link unavailable for this printing.</p>`;
   }
@@ -149,6 +149,18 @@ export function renderResult({ card, cardmarketHref, onSearchAgain }) {
   `;
 
   document.getElementById('btn-again').addEventListener('click', onSearchAgain);
+
+  // Navigate in same tab instead of opening a new one
+  const cmLink = document.getElementById('cardmarket-link');
+  if (cmLink) {
+    cmLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = cmLink.getAttribute('href');
+      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+        if (tab) chrome.tabs.update(tab.id, { url: href });
+      });
+    });
+  }
 }
 
 export function renderError(message) {

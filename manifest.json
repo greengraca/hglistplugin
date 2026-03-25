@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "HG List Plugin",
+  "name": "Hunting Grounds Listing Plugin",
   "version": "1.0.0",
   "description": "Look up MTG card names by collector number on Cardmarket using Scryfall.",
   "action": {},
