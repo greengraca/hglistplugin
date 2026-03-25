@@ -6,16 +6,16 @@
 
 body {
   font-family: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.4;
   color: #e0e0e0;
   background: #151e2b;
-  padding: 10px;
-  min-width: 200px;
+  padding: 8px;
+  min-width: 180px;
 }
 
 h2 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: #ffffff;
 }
@@ -24,18 +24,18 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #2a3a4e;
 }
 
 .icon-btn {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
   color: #8899aa;
-  padding: 4px;
+  padding: 2px;
   transition: color 0.2s;
 }
 
@@ -57,21 +57,24 @@ h2 {
 }
 
 .detected-set .label {
-  font-size: 12px;
+  font-size: 10px;
   color: #8899aa;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  width: 100%;
 }
 
 .detected-set .value {
   font-weight: 600;
   flex: 1;
   color: #f5a623;
+  font-size: 13px;
+  word-break: break-word;
 }
 
 .small-btn {
-  font-size: 12px;
-  padding: 4px 10px;
+  font-size: 11px;
+  padding: 3px 8px;
   background: #2a3a4e;
   border: 1px solid #3a4f66;
   border-radius: 4px;
@@ -94,10 +97,11 @@ h2 {
 
 .search-form input {
   flex: 1;
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid #2a3a4e;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 12px;
+  min-width: 0;
   background: #1c2a3a;
   color: #e0e0e0;
   transition: border-color 0.2s;
@@ -113,14 +117,15 @@ h2 {
 }
 
 .search-form button {
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: #f5a623;
   color: #151e2b;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
   transition: background 0.2s;
 }
 
@@ -139,7 +144,7 @@ h2 {
   border: none;
   color: #f5a623;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 11px;
   padding: 4px 0;
   text-decoration: none;
   transition: color 0.2s;
@@ -157,19 +162,19 @@ h2 {
 
 .search-set label {
   display: block;
-  font-size: 12px;
+  font-size: 10px;
   color: #8899aa;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .search-set input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid #2a3a4e;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 12px;
   background: #1c2a3a;
   color: #e0e0e0;
   transition: border-color 0.2s;
@@ -199,9 +204,9 @@ h2 {
 }
 
 .autocomplete-list li {
-  padding: 8px 12px;
+  padding: 6px 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   color: #c0c8d0;
   transition: background 0.15s;
 }
@@ -213,17 +218,17 @@ h2 {
 
 /* Result card */
 .result-card {
-  margin-top: 16px;
-  padding: 14px;
+  margin-top: 10px;
+  padding: 10px;
   background: #1c2a3a;
   border: 1px solid #2a3a4e;
   border-radius: 8px;
 }
 
 .card-name {
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: #ffffff;
 }
 
@@ -236,14 +241,14 @@ h2 {
 
 .cardmarket-link {
   display: inline-block;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: #f5a623;
   color: #151e2b;
   text-decoration: none;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   transition: background 0.2s;
 }
 
@@ -261,7 +266,7 @@ h2 {
 /* Messages */
 .off-site {
   text-align: center;
-  padding-top: 40px;
+  padding-top: 24px;
 }
 
 .message {
@@ -289,7 +294,7 @@ h2 {
 }
 
 .settings label {
-  font-size: 12px;
+  font-size: 10px;
   color: #8899aa;
   margin-top: 4px;
   text-transform: uppercase;
@@ -297,10 +302,10 @@ h2 {
 }
 
 .settings input {
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid #2a3a4e;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 12px;
   background: #1c2a3a;
   color: #e0e0e0;
 }
@@ -317,11 +322,11 @@ h2 {
 }
 
 .settings-actions button {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   transition: background 0.2s;
 }
@@ -352,9 +357,9 @@ h2 {
   transform: translateX(-50%) translateY(20px);
   background: #f5a623;
   color: #151e2b;
-  padding: 8px 20px;
+  padding: 6px 14px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
