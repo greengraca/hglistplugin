@@ -64,6 +64,7 @@ Three components, Manifest V3:
 
 ### 4. Result Display
 - Card English name (prominent)
+- **Auto-copy to clipboard:** On successful lookup, automatically copy the English card name to the clipboard via `navigator.clipboard.writeText()`. Show a brief confirmation message (e.g., "Copied to clipboard!") that fades after ~2 seconds.
 - Card image thumbnail: use `image_uris.normal` if present at top level; if absent (double-faced cards), fall back to `card_faces[0].image_uris.normal`
 - Cardmarket link button: use `purchase_uris.cardmarket` from the Scryfall response, appending user's country/language params via the `URL` API for safe query param handling. If `purchase_uris.cardmarket` is absent (digital-only or promo cards), show "Cardmarket link unavailable for this printing."
 - "Search again" option to clear result and return to input
