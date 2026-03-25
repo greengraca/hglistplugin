@@ -45,7 +45,12 @@ export function resolveSetCode(setName, sets) {
 
 export async function lookupCard(setCode, collectorNumber) {
   const url = `https://api.scryfall.com/cards/${encodeURIComponent(setCode)}/${encodeURIComponent(collectorNumber)}`;
-  const response = await fetch(url, FETCH_OPTIONS);
+  let response;
+  try {
+    response = await fetch(url, FETCH_OPTIONS);
+  } catch (e) {
+    return { error: 'network' };
+  }
 
   if (response.status === 404) {
     return { error: 'not_found' };

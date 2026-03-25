@@ -190,13 +190,6 @@ h2 {
   margin-bottom: 4px;
 }
 
-.clipboard-status {
-  font-size: 12px;
-  color: #27ae60;
-  min-height: 18px;
-  margin-bottom: 8px;
-}
-
 .card-image {
   width: 100%;
   max-width: 300px;

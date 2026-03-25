@@ -2,8 +2,9 @@ const app = () => document.getElementById('app');
 
 // Escape HTML entities to prevent XSS from external data (Scryfall API, DOM scraping)
 function esc(str) {
+  if (str == null) return '';
   const div = document.createElement('div');
-  div.textContent = str;
+  div.textContent = String(str);
   return div.innerHTML;
 }
 
@@ -133,7 +134,7 @@ export function renderResult({ card, cardmarketHref, onSearchAgain }) {
 
   let linkHtml = '';
   if (cardmarketHref) {
-    linkHtml = `<a href="${esc(cardmarketHref)}" target="_blank" rel="noopener" class="cardmarket-link">View on Cardmarket</a>`;
+    linkHtml = `<a href="${esc(cardmarketHref)}" target="_blank" rel="noopener noreferrer" class="cardmarket-link">View on Cardmarket</a>`;
   } else {
     linkHtml = `<p class="no-link">Cardmarket link unavailable for this printing.</p>`;
   }
@@ -141,7 +142,6 @@ export function renderResult({ card, cardmarketHref, onSearchAgain }) {
   resultArea.innerHTML = `
     <div class="result-card">
       <h3 class="card-name">${esc(card.name)}</h3>
-      <div id="clipboard-status" class="clipboard-status"></div>
       ${card.imageUrl ? `<img src="${esc(card.imageUrl)}" alt="${esc(card.name)}" class="card-image">` : ''}
       ${linkHtml}
       <button id="btn-again" class="link-btn">Search again</button>
@@ -154,7 +154,7 @@ export function renderResult({ card, cardmarketHref, onSearchAgain }) {
 export function renderError(message) {
   const resultArea = document.getElementById('result-area');
   if (!resultArea) return;
-  resultArea.innerHTML = `<p class="error">${message}</p>`;
+  resultArea.innerHTML = `<p class="error">${esc(message)}</p>`;
 }
 
 export function renderLoading() {
@@ -171,10 +171,10 @@ export function renderSettings({ sellerCountry, languageFilter, onSave, onBack }
       </div>
       <form id="settings-form">
         <label for="seller-country">Seller Country (ID):</label>
-        <input type="number" id="seller-country" value="${sellerCountry}" min="1">
+        <input type="number" id="seller-country" value="${esc(sellerCountry)}" min="1">
 
         <label for="language-filter">Language Filter (comma-separated IDs):</label>
-        <input type="text" id="language-filter" value="${languageFilter}" placeholder="1,8">
+        <input type="text" id="language-filter" value="${esc(languageFilter)}" placeholder="1,8">
 
         <div class="settings-actions">
           <button type="submit">Save</button>
