@@ -10,7 +10,7 @@ Three components, Manifest V3:
 
 - **Side Panel** (`sidepanel.html` + `sidepanel.js`) — The UI. Rendered via `chrome.sidePanel` API.
 - **Content Script** (`content.js`) — Injected into Cardmarket pages. Scrapes the expansion/set name from the DOM on demand.
-- **Service Worker** (`background.js`) — Manages side panel availability based on tab URL via `chrome.sidePanel.setOptions()`.
+- **Service Worker** (`background.js`) — Manages side panel availability via `chrome.sidePanel.setOptions()`. Enables the panel on any `cardmarket.com` page; the content script is limited to Singles pages only.
 
 ## User Flow
 
@@ -41,7 +41,8 @@ Three components, Manifest V3:
 ### Off-Site Behavior
 
 - When the active tab is not on `cardmarket.com`, the side panel shows a message: "Navigate to Cardmarket to get started."
-- The side panel remains available but inactive.
+- When on `cardmarket.com` but not on a Singles page (e.g., homepage, seller page), treat the same as a failed detection — show the auto mode view with no detected set and prompt the user to use manual search.
+- The side panel remains available but inactive off-site.
 
 ## Side Panel Views
 
@@ -64,7 +65,7 @@ Three components, Manifest V3:
 ### 4. Result Display
 - Card English name (prominent)
 - Card image thumbnail: use `image_uris.normal` if present at top level; if absent (double-faced cards), fall back to `card_faces[0].image_uris.normal`
-- Cardmarket link button: use `purchase_uris.cardmarket` from the Scryfall response, appending `&sellerCountry={country}&language={languages}` query params
+- Cardmarket link button: use `purchase_uris.cardmarket` from the Scryfall response, appending user's country/language params via the `URL` API for safe query param handling. If `purchase_uris.cardmarket` is absent (digital-only or promo cards), show "Cardmarket link unavailable for this printing."
 - "Search again" option to clear result and return to input
 
 ### 5. Settings View
@@ -94,14 +95,14 @@ Three components, Manifest V3:
 
 ### Set List (for manual mode autocomplete + set code resolution)
 - Endpoint: `GET https://api.scryfall.com/sets`
-- Fetched once, cached in `chrome.storage.local` with a 24-hour TTL.
+- Fetched once, cached in `chrome.storage.local` with a 24-hour TTL. TTL is checked whenever the set list is needed (set name resolution or autocomplete entry). If expired, refresh in the background before proceeding.
 - Used to: (a) resolve a scraped set name to a Scryfall set code, (b) power the manual mode autocomplete.
 
 ### Card Lookup
 - Endpoint: `GET https://api.scryfall.com/cards/{set_code}/{collector_number}`
 - Called on each user search submission.
 - Response fields used: `name`, `image_uris.normal` (with `card_faces[0].image_uris.normal` fallback for DFCs), `set_name`, `collector_number`, `purchase_uris.cardmarket`.
-- All requests must include a `User-Agent` header (e.g., `HGListPlugin/1.0`) per Scryfall's usage guidelines.
+- All requests must include a `User-Agent` header (e.g., `HGListPlugin/1.0`) per Scryfall's usage guidelines. The single-request-per-submit pattern is inherently compliant with Scryfall's 10 req/s rate limit.
 
 ## Set Name Resolution
 
