@@ -11,7 +11,7 @@ function esc(str) {
 export function renderOffSite() {
   app().innerHTML = `
     <div class="view off-site">
-      <h2>Hunting Grounds</h2>
+      <h2>Hunting Grounds Listing Plugin</h2>
       <p class="message">Navigate to Cardmarket to get started.</p>
     </div>
   `;
@@ -25,7 +25,7 @@ export function renderAutoMode({ detectedSet, unmatchedSetName, onDetect, onSear
   app().innerHTML = `
     <div class="view auto-mode">
       <div class="header">
-        <h2>Hunting Grounds</h2>
+        <h2>Hunting Grounds Listing Plugin</h2>
         <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
       </div>
       <div class="detected-set">
@@ -58,7 +58,7 @@ export function renderManualMode({ sets, onSelectSet, onAutoDetect, onSettings }
   app().innerHTML = `
     <div class="view manual-mode">
       <div class="header">
-        <h2>Hunting Grounds</h2>
+        <h2>Hunting Grounds Listing Plugin</h2>
         <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
       </div>
       <div class="search-set">
@@ -103,7 +103,7 @@ export function renderManualWithCollector({ selectedSet, onSearch, onBack, onSet
   app().innerHTML = `
     <div class="view manual-mode">
       <div class="header">
-        <h2>Hunting Grounds</h2>
+        <h2>Hunting Grounds Listing Plugin</h2>
         <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
       </div>
       <div class="detected-set">
